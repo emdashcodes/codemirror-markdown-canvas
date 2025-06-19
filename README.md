@@ -1,8 +1,6 @@
-# Rich Markdown for CodeMirror 6
+# Markdown Canvas: Rich Editing for CodeMirror 6
 
-[Demo](https://markdoc-hybrid-editor.netlify.app)
-
-This is a plugin for CodeMirror 6 that adds a hybrid rich-text editing mode for Markdown content. It applies rich-text styling to Markdown content and hides the Markdown formatting syntax. It only shows the formatting characters for the specific element around the position of the text cursor.
+Markdown Canvas is a plugin for CodeMirror 6 that provides a rich editing experience for Markdown content. It creates a hybrid rich-text editor where Markdown syntax is visually styled and hidden, but revealed for editing when the cursor is positioned on certain lines or within specific elements. Inspired by Obsidian's Markdown Live Preview.
 
 The plugin takes advantage of the [lezer-markdown](https://github.com/lezer-parser/markdown) tokenizer that comes with CodeMirror's [Markdown language support](https://github.com/codemirror/lang-markdown). For standard Markdown elements like headings, lists, links, fenced code blocks, and inline formatting spans the plugin relies on CodeMirror highlighting rules to apply rich formatting and wraps a `cm-markdoc-hidden` class around the Markdown syntax characters that should be hidden from the user.
 
@@ -10,12 +8,10 @@ For more complex structural elements like tables, blockquotes, and [Markdoc tags
 
 When you add the plugin to a CodeMirror `EditorState`, you can optionally pass in a [Markdoc config object](https://markdoc.dev/docs/config) with custom tag and node definitions. You can refer to the [provided example](example/index.ts) to see basic usage. The plugin also relies on some [specific CSS styling](example/style.css) in order to properly display the rich content. The CSS classes introduced by the plugin are prefixed with `.cm-markdoc-`.
 
-This plugin is inspired by [HyperMD](https://github.com/laobubu/HyperMD), a CodeMirror 5 rich Markdown plugin that is no longer actively maintained. This plugin is written from scratch and does not use any existing HyperMD code, but it aims to bring similar functionality to CodeMirror 6.
-
 ## Installation
 
 ```bash
-npm install
+npm install @emdashcodes/codemirror-markdown-canvas
 ```
 
 ## Development
@@ -78,3 +74,12 @@ npm start    # Start development server on http://localhost:8000
 - The rendered block replacement code is not yet optimized, so it recomputes all of the replaced regions on every operation instead of only updating them as needed
 - Clicking inside of rendered blocks causes the cursor to be placed at the equivalent position in the document, which may not match the position of the rendered content
 - Nested Markdoc tags do not yet render correctly
+
+## Credits
+
+This project is based on the original [codemirror-rich-markdoc](https://github.com/segphault/codemirror-rich-markdoc) by Ryan Paul. It has been enhanced and developed independently with additional features, bug fixes, additional development tooling, and ongoing maintenance.
+
+Additional special thanks to:
+
+- **[HyperMD](https://github.com/laobubu/HyperMD)** for inspiration and enabling rich Markdown editing in CodeMirror 5
+- **[Obsidian](https://obsidian.md)** for UI inspiration and an excellent Markdown editing experience

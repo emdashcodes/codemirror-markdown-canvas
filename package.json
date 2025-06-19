@@ -1,7 +1,7 @@
 {
-  "name": "codemirror-rich-markdoc",
-  "version": "0.0.1",
-  "description": "CodeMirror 6 plugin that supports rich Markdown editing",
+  "name": "@emdashcodes/codemirror-markdown-canvas",
+  "version": "0.1.0",
+  "description": "CodeMirror 6 plugin for rich Markdown editing with a canvas-like experience",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -15,7 +15,7 @@
     "dev": "npm run build -- --watch",
     "prepare": "husky"
   },
-  "author": "Ryan Paul",
+  "author": "Em Shreve",
   "license": "MIT",
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
