@@ -11,7 +11,7 @@ When you add the plugin to a CodeMirror `EditorState`, you can optionally pass i
 ## Installation
 
 ```bash
-npm install @emdashcodes/codemirror-markdown-canvas
+git clone https://github.com/emdashcodes/codemirror-markdown-canvas.git
 ```
 
 ## Development
