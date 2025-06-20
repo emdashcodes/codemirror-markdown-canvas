@@ -53,8 +53,29 @@ function customCursorUp(view: any): boolean {
     // Check if target position is in a block
     const block = findBlockAt(view.state, targetPos);
     if (block) {
-      // Position cursor inside the block to make it editable
       const blockText = view.state.doc.sliceString(block.from, block.to);
+
+      // Check if this is a table
+      if (blockText.trim().startsWith('|')) {
+        // For tables, focus the last row, appropriate column
+        setTimeout(() => {
+          const tableElement = document.querySelector('.cm-markdoc-table');
+          if (tableElement) {
+            const rows = tableElement.querySelectorAll('tr');
+            const lastRow = rows[rows.length - 1];
+            if (lastRow) {
+              const cells = lastRow.querySelectorAll('.cm-markdoc-tableCell');
+              const targetCell = Math.min(colOffset, cells.length - 1);
+              if (cells[targetCell]) {
+                (cells[targetCell] as HTMLElement).focus();
+              }
+            }
+          }
+        }, 0);
+        return true;
+      }
+
+      // For other blocks, position cursor inside the block to make it editable
       const blockLines = blockText.split('\n');
       const lastLine = blockLines[blockLines.length - 1];
       const lastLineStart = block.to - lastLine.length;
@@ -91,8 +112,29 @@ function customCursorDown(view: any): boolean {
     // Check if target position is in a block
     const block = findBlockAt(view.state, targetPos);
     if (block) {
-      // Position cursor inside the block to make it editable
       const blockText = view.state.doc.sliceString(block.from, block.to);
+
+      // Check if this is a table
+      if (blockText.trim().startsWith('|')) {
+        // For tables, focus the first row, appropriate column
+        setTimeout(() => {
+          const tableElement = document.querySelector('.cm-markdoc-table');
+          if (tableElement) {
+            const rows = tableElement.querySelectorAll('tr');
+            const firstRow = rows[0];
+            if (firstRow) {
+              const cells = firstRow.querySelectorAll('.cm-markdoc-tableCell');
+              const targetCell = Math.min(colOffset, cells.length - 1);
+              if (cells[targetCell]) {
+                (cells[targetCell] as HTMLElement).focus();
+              }
+            }
+          }
+        }, 0);
+        return true;
+      }
+
+      // For other blocks, position cursor inside the block to make it editable
       const blockLines = blockText.split('\n');
       const firstLineEnd = block.from + blockLines[0].length;
       const targetInBlock = Math.min(block.from + colOffset, firstLineEnd);
@@ -118,7 +160,7 @@ export default function (config: MarkdocPluginConfig) {
   return ViewPlugin.fromClass(RichEditPlugin, {
     decorations: plugin => plugin.decorations,
     provide: _plugin => [
-      renderBlock(config.markdoc),
+      ...renderBlock(config.markdoc),
       syntaxHighlighting(highlightStyle),
       markdown(mergedConfig),
       keymap.of([
@@ -132,8 +174,13 @@ export default function (config: MarkdocPluginConfig) {
           target instanceof Element &&
           target.matches('.cm-markdoc-renderBlock *')
         ) {
+          // For table elements, completely ignore the event
+          if (target.closest('.cm-markdoc-editableTable')) {
+            return true; // Handled, don't let CodeMirror process this
+          }
           view.dispatch({ selection: { anchor: view.posAtDOM(target) } });
         }
+        return false; // Let CodeMirror handle other events normally
       },
     },
   });

@@ -80,3 +80,118 @@
 .cm-markdoc-callout--warning .icon {
   color: rgb(229, 153, 62);
 }
+
+/* Editable Table Styles */
+.cm-markdoc-editableTable {
+  position: relative;
+  margin: 10px 0;
+  font-family: sans-serif;
+  display: inline-block;
+}
+
+.cm-markdoc-table {
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.4;
+  border: 1px solid #ddd;
+}
+
+.cm-markdoc-tableCell {
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+  min-width: 40px;
+  min-height: 18px;
+  outline: none;
+  background-color: transparent;
+  transition: background-color 0.15s ease;
+  position: relative;
+  vertical-align: top;
+}
+
+.cm-markdoc-tableCell:focus {
+  outline: none;
+}
+
+.cm-markdoc-table th.cm-markdoc-tableCell {
+  font-weight: 600;
+  background-color: transparent;
+}
+
+/* Table Control Buttons */
+.cm-markdoc-table-addRow,
+.cm-markdoc-table-addCol {
+  position: absolute;
+  background-color: #ddd;
+  color: #666;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  font-weight: normal;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  z-index: 10;
+}
+
+.cm-markdoc-table-addRow:hover,
+.cm-markdoc-table-addCol:hover {
+  background-color: #ccc;
+  color: #333;
+}
+
+.cm-markdoc-table-addRow {
+  bottom: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.cm-markdoc-table-addCol {
+  right: -9px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Buttons are hidden by default, shown on hover */
+.cm-markdoc-table-addRow,
+.cm-markdoc-table-addCol {
+  display: none;
+}
+
+/* Show row button when hovering over last row */
+.cm-markdoc-editableTable:has(.cm-markdoc-lastRow:hover) .cm-markdoc-table-addRow {
+  display: flex !important;
+}
+
+/* Show column button when hovering over any last column cell */
+.cm-markdoc-editableTable:has(.cm-markdoc-lastColumn:hover) .cm-markdoc-table-addCol {
+  display: flex !important;
+}
+
+/* Keep buttons visible when hovering over them */
+.cm-markdoc-table-addRow:hover,
+.cm-markdoc-table-addCol:hover {
+  display: flex !important;
+}
+
+/* Table borders and spacing */
+.cm-markdoc-table tr:first-child th {
+  border-top: none;
+}
+
+.cm-markdoc-table tr:last-child td {
+  border-bottom: none;
+}
+
+.cm-markdoc-table td:first-child,
+.cm-markdoc-table th:first-child {
+  border-left: none;
+}
+
+.cm-markdoc-table td:last-child,
+.cm-markdoc-table th:last-child {
+  border-right: none;
+}

@@ -58,7 +58,8 @@ export default class RichEditPlugin implements PluginValue {
 
           if (
             (node.name.startsWith('ATXHeading') ||
-              tokenElement.includes(node.name)) &&
+              tokenElement.includes(node.name) ||
+              node.name === 'Table') &&
             cursor.from >= node.from &&
             cursor.to <= node.to
           ) {
