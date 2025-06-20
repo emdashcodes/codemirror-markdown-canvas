@@ -1,6 +1,6 @@
 # Sample Markdown Content
 
-This is an *example* of **formatted** text with a [link](/doc) and a `code span`.
+This is an _example_ of **formatted** text with a [link](/doc) and a `code span`.
 
 ## Markdoc tags
 
@@ -23,16 +23,16 @@ This is **formatted** text inside of a generic tag.
 
 ## Bulleted list
 
-* This is a sample list
-* This is another list item
-  * This is an indented list item
-    * This is a deeply nested item
-  * This is another indented list item
+- This is a sample list
+- This is another list item
+  - This is an indented list item
+    - This is a deeply nested item
+  - This is another indented list item
 
 ## Table
 
-| Foo | Bar | Baz |
-| --- | --- | --- |
+| Foo    | Bar    | Baz    |
+| ------ | ------ | ------ |
 | Cell 1 | Cell 2 | Cell 3 |
 | Cell 4 | Cell 5 | Cell 6 |
 
@@ -41,7 +41,12 @@ This is **formatted** text inside of a generic tag.
 ```javascript
 class Example {
   sampleFunction() {
-    console.log("This is a code sample");
+    console.log('This is a code sample');
   }
 }
+```
+
+```python
+def performance_test():
+    print("Another code block for testing")
 ```
