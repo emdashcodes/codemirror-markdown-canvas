@@ -8,6 +8,18 @@ import type { EditorState, Range } from '@codemirror/state';
 import type { DecorationSet } from '@codemirror/view';
 import type { Config } from '@markdoc/markdoc';
 
+import { hashString } from './utils';
+
+const RENDERABLE_NODE_TYPES = ['Table', 'Blockquote', 'MarkdocTag'] as const;
+function isRenderableNodeType(
+  nodeName: string
+): nodeName is (typeof RENDERABLE_NODE_TYPES)[number] {
+  return (RENDERABLE_NODE_TYPES as readonly string[]).includes(nodeName);
+}
+
+// Cache for rendered widget HTML to avoid re-parsing identical content
+const widgetCache = new Map<string, string>();
+
 const defaultConfig: Config = {
   nodes: {
     blockquote: {
@@ -51,6 +63,13 @@ class RenderBlockWidget extends WidgetType {
   ) {
     super();
 
+    const cacheKey = hashString(source);
+    const cachedResult = widgetCache.get(cacheKey);
+    if (cachedResult) {
+      this.rendered = cachedResult;
+      return;
+    }
+
     const mergedConfig = {
       ...defaultConfig,
       nodes: { ...defaultConfig.nodes, ...config.nodes },
@@ -60,10 +79,12 @@ class RenderBlockWidget extends WidgetType {
     const document = markdoc.parse(source);
     const transformed = markdoc.transform(document, mergedConfig);
     this.rendered = markdoc.renderers.html(transformed);
+
+    widgetCache.set(cacheKey, this.rendered);
   }
 
   eq(widget: RenderBlockWidget): boolean {
-    return widget.source === widget.source;
+    return this.source === widget.source;
   }
 
   toDOM(): HTMLElement {
@@ -95,7 +116,7 @@ function replaceBlocks(
     from,
     to,
     enter(node) {
-      if (!['Table', 'Blockquote', 'MarkdocTag'].includes(node.name)) {
+      if (!isRenderableNodeType(node.name)) {
         return true;
       }
 
@@ -157,7 +178,38 @@ export default function (config: Config) {
       return RangeSet.of(replaceBlocks(state, config), true);
     },
 
-    update(_oldDecorations, transaction) {
+    update(oldDecorations, transaction) {
+      // Optimize selection-only changes by checking if cursor entered/exited blocks
+      if (!transaction.docChanged && transaction.selection) {
+        const oldCursor = transaction.startState.selection.main;
+        const newCursor = transaction.state.selection.main;
+        const oldTree = syntaxTree(transaction.startState);
+
+        let cursorCrossedBlockBoundary = false;
+        oldTree.iterate({
+          enter(node) {
+            if (isRenderableNodeType(node.name)) {
+              const oldInBlock =
+                oldCursor.from >= node.from && oldCursor.to <= node.to;
+              const newInBlock =
+                newCursor.from >= node.from && newCursor.to <= node.to;
+
+              if (oldInBlock !== newInBlock) {
+                cursorCrossedBlockBoundary = true;
+                return false;
+              }
+            }
+            return true;
+          },
+        });
+
+        // Use fast path if cursor didn't cross block boundaries
+        if (!cursorCrossedBlockBoundary) {
+          return oldDecorations.map(transaction.changes);
+        }
+      }
+
+      // Full recomputation needed
       return RangeSet.of(replaceBlocks(transaction.state, config), true);
     },
 

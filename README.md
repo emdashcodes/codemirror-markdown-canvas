@@ -69,9 +69,7 @@ npm start    # Start development server on http://localhost:8000
 ## Known Issues
 
 - It is still missing proper support for Markdown image syntax
-- Text surrounded by brackets (`[foo]`) is erroneously rendered as though it is a link
 - In ATX-style headers, the renderer always assumes there is one space between the header mark and the header text instead of computing the actual amount of whitespace
-- The rendered block replacement code is not yet optimized, so it recomputes all of the replaced regions on every operation instead of only updating them as needed
 - Clicking inside of rendered blocks causes the cursor to be placed at the equivalent position in the document, which may not match the position of the rendered content
 - Nested Markdoc tags do not yet render correctly
 
