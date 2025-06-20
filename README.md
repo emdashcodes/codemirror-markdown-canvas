@@ -69,7 +69,6 @@ npm start    # Start development server on http://localhost:8000
 ## Known Issues
 
 - It is still missing proper support for Markdown image syntax
-- In ATX-style headers, the renderer always assumes there is one space between the header mark and the header text instead of computing the actual amount of whitespace
 - Clicking inside of rendered blocks causes the cursor to be placed at the equivalent position in the document, which may not match the position of the rendered content
 - Nested Markdoc tags do not yet render correctly
 
